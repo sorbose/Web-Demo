@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心</title>
+    <script>
+        var xmlhttp= new XMLHttpRequest();
+        xmlhttp.onreadystatechange=function(){
+            var resText="";
+            if(this.readyState==4&&this.status==200)
+            {
+                resText=this.responseText;
+                if(resText=="")
+                {
+                    window.location.replace("./login.html");
+                }
+                else{
+                    php_json_1=JSON.parse(resText);
+                }
+            }
+        }
+        xmlhttp.open("GET","./isLogin.php",false);
+        xmlhttp.send();
+    </script>
+</head>
+
+
+
+<body>
+    <nav style="text-align: right;font-size: smaller;">
+        <span>欢迎您，</span><span id="welcome_un">&nbsp;</span>
+        <a href="./changePW.html">修改密码</a>
+        <a href="./loginout.php">安全退出</a>
+    </nav>
+    <table align="center">
+        <tr>
+            <th align="center">您的账号信息</th>
+            <th>值</th>
+        </tr>
+        <tr>
+            <td>用户名</td>
+            <td id="td_un"></td>
+        </tr>
+        <tr>
+            <td>权限</td>
+            <td id="td_auth"></td>
+        </tr>
+        <tr>
+            <td>班组</td>
+            <td id="td_group"></td>
+        </tr>
+        <tr>
+            <td>属性</td>
+            <td id="td_attribute"></td>
+        </tr>
+        <tr>
+            <td>日期</td>
+            <td id="td_date"></td>
+        </tr>
+    </table>
+</body>
+</html>
+<script>
+    document.getElementById('welcome_un').innerHTML=document.getElementById('td_un').innerHTML=php_json_1['un'];
+    document.getElementById('td_auth').innerHTML=php_json_1['auth'];
+    document.getElementById('td_group').innerHTML=php_json_1['group'];
+    document.getElementById('td_attribute').innerHTML=php_json_1['attribute'];
+    document.getElementById('td_date').innerHTML=php_json_1['date'];
+</script>
+
+<script></script>
+

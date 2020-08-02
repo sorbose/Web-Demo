@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>修改密码</title>
+    <style>
+		.hint{
+			color: grey;
+			font-size: small;
+		}
+		.note{
+			color:red;
+			font-size: small;
+			visibility: hidden;
+		}
+	</style>
+</head>
+<body>
+    <form action="changePW.php" method="POST" onsubmit="return verify()">
+		<fieldset>
+			<legend>修改密码</legend>
+			<label>原密码&nbsp;&nbsp;&nbsp;：</label>
+			<input type="password" name="PWold" maxlength="16" required="required" onblur="verifyPWold()" />
+            <span class="note" id="PWold_note">密码格式不正确</span>
+            <br/><br/>
+			<label>新密码&nbsp;&nbsp;&nbsp;：</label>
+			<input type="password" name="PW" maxlength="16" required="required" onblur="verifyPW()" />
+			<span class="note" id="PW_note">密码格式不正确</span>
+            <p class='hint'>6~16个字符的数字、英文字母、-和下划线</p>
+			<label>密码重复：</label>
+			<input type="password" name="PWrep" maxlength="16" required="required" onblur="verifyPWrep()" />
+			<span class="note" id="PWrep_note">两次密码输入不一致</span>
+            <br/><br/>
+			<label>验证码：&nbsp;&nbsp;&nbsp;</label>
+            <input type="text" name="authcode" autocomplete="off" maxlength="4" required="required" onblur="checkCapLen()"/>
+            <img id="cap_img" border="1" src="./captcha.php" width="125" height="25" align="middle" onclick="this.src=this.src+'?r='+Math.random()" />
+            <div id="cap_note" style="font-size:small;color:red">&nbsp;</div>
+			<input type="submit" value="确认修改" />
+		</fieldset>
+	</form>
+    
+</body>
+<script src="./md5.js"></script>
+<script>
+    function verifyPWold(){
+    var PWold_note=document.getElementById('PWold_note');
+    var str=document.getElementsByName('PWold')[0].value;
+    var pat=/[^A-Za-z0-9_-]/;
+    var len=str.length;
+    if (len>16||len<6)
+    {
+        PWold_note.innerText="密码长度不符合要求";
+        PWold_note.style.visibility="visible";
+        return false;
+    }
+    if(pat.test(str))
+    {
+        PWold_note.innerText="密码包含其他字符";
+        PWold_note.style.visibility="visible";
+        return false;
+    }
+    PWold_note.innerText="密码格式不正确";//恢复默认设置
+    PWold_note.style.visibility="hidden";
+    return true;
+    }
+
+function verifyPW(){
+    var PW_note=document.getElementById('PW_note');
+    var str=document.getElementsByName('PW')[0].value;
+    var pat=/[^A-Za-z0-9_-]/;
+    var len=str.length;
+    if (len>16||len<6)
+    {
+        PW_note.innerText="密码长度不符合要求";
+        PW_note.style.visibility="visible";
+        return false;
+    }
+    if(pat.test(str))
+    {
+        PW_note.innerText="密码包含其他字符";
+        PW_note.style.visibility="visible";
+        return false;
+    }
+    PW_note.innerText="密码格式不正确";//恢复默认设置
+    PW_note.style.visibility="hidden";
+    return true;
+    }
+
+    function verifyPWrep(){
+		var str_rep=document.getElementsByName('PWrep')[0].value;
+		var str=document.getElementsByName('PW')[0].value;
+		var PWrep_note=document.getElementById('PWrep_note');
+		if (str===str_rep){
+			PWrep_note.style.visibility="hidden";
+			return true;
+		}
+		else{
+			PWrep_note.style.visibility="visible";
+			return false;
+		}
+	}
+    function checkCapLen(){
+        if(document.getElementsByName('authcode')[0].value.length<4)
+        {
+            document.getElementById('cap_note').innerText="请输入验证码!";
+            return false;
+        }
+        document.getElementById('cap_note').innerText="";
+        return true;
+    }
+    function verify()
+	{
+		if(verifyPWold()&&verifyPW()&&verifyPWrep()&&checkCapLen())
+		{
+			document.getElementsByName("PWrep")[0].value = md5(document.getElementsByName("PWrep")[0].value);
+			document.getElementsByName("PWold")[0].value = md5(document.getElementsByName("PWold")[0].value);
+			return true;
+		}
+		else {return false;}
+	}
+</script>
+</html>

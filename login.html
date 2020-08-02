@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>信息管理系统登录页面</title>
+</head>
+
+<body>
+    <form action="login.php" method="POST" onsubmit="return verify()">
+        <fieldset>
+            <legend>请登录</legend>
+            <label>用户名：</label>
+            <input type="text" name="username" maxlength="20" required="required" />
+            <br /><br />
+            <label>密&nbsp;&nbsp;&nbsp;码：</label>
+            <input type="password" name="PW" maxlength="20" required="required" />
+            <br /><br />
+            <label>验证码：</label>
+            <input type="text" name="authcode" autocomplete="off" maxlength="4" required="required" onblur="checkCap()"/>
+            <img id="cap_img" border="1" src="./captcha.php" width="125" height="25" align="middle" onclick="this.src=this.src" />
+            <div id="cap_note" style="font-size:small;color:red">&nbsp;</div>
+            <input type="submit" value="登录" />
+            &nbsp;&nbsp;&nbsp;<a href="signup.php">注册</a>
+            <p style="color:grey;font-size:small">忘记密码请联系管理员！</p>
+        </fieldset>
+    </form>
+    <p>测试用户test1/123456;test2/aaaaaa</p>
+    <script src="./md5.js"></script>
+    <script>document.getElementsByName("PW")[0].value=""</script>
+    <script>
+        function PW_md5() {
+            document.getElementsByName("PW")[0].value = md5(document.getElementsByName("PW")[0].value);
+            console.log(document.getElementsByName("PW")[0].value);
+            return true;
+        }
+        function checkCap(){
+            if(document.getElementsByName('authcode')[0].value.length<4)
+            {
+                document.getElementById('cap_note').innerText="请输入验证码!";
+                return false;
+            }
+            return true;
+        }
+        function verify(){
+            if (checkCap()&&PW_md5())
+            {return true;}
+            else {return false;}
+        }
+    </script>
+    <!--https://www.jb51.net/article/172542.htm
+    https://www.jianshu.com/p/4f37e2c069d6
+    https://www.jianshu.com/p/7473f5bdd9c0
+    -->
+</body>
+
+</html>
